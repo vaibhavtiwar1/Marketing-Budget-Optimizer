@@ -61,6 +61,15 @@ init_guess = [1.0] * len(channels)
 bounds = [(0, 1000)] * len(channels) # Max 1 million (1000K) per channel
 constraints = {'type': 'ineq', 'fun': constraint_target_leads}
 
+# Calculate the theoretical ceiling before optimizing
+theoretical_max_leads = sum(lead_function(1000, alpha) for alpha in channels.values())
+
+if target_leads > theoretical_max_leads:
+    st.error("🛑 **Mathematical Limit Reached!**")
+    st.write(f"Based on your historical efficiency, the absolute maximum number of leads this mix can generate before hitting the budget ceiling ($1,000K per channel) is **{int(theoretical_max_leads)}**.")
+    st.info("💡 **How to fix:** Lower your 'Target Total Leads' below this number, or input more efficient historical channel data.")
+    st.stop() # This halts the app gracefully so the optimizer doesn't crash!
+
 # Run Optimizer
 result = minimize(objective_function, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
 
