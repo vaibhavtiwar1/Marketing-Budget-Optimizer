@@ -4,6 +4,8 @@ import pandas as pd
 from scipy.optimize import minimize
 import plotly.express as px
 import plotly.graph_objects as go
+from google import genai
+from google.genai import types
 
 # 1. Page Configuration
 st.set_page_config(page_title="Media Mix Optimizer", layout="wide")
@@ -187,6 +189,9 @@ if result.success:
     with chat_col:
         st.subheader("🧠 AI Marketing Advisor")
         st.caption("Ask for strategic advice based on your current budget mix.")
+
+        # Initialize Google Gemini API Client using Streamlit Cloud Secrets
+        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
         
         # 1. Initialize chat memory
         if "messages" not in st.session_state:
