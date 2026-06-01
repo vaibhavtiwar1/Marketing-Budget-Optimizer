@@ -201,19 +201,6 @@ if result.success:
         col3.metric("Blended CAC (K)", f"${blended_cac:,.2f}")
         
         st.markdown("---")
-    
-    # ------------------------------------------
-    # TAB 1: The Math & Data Dashboard
-    # ------------------------------------------
-    with tab1:
-        st.markdown("<br>", unsafe_allow_html=True)
-        col1, col2, col3 = st.columns(3)
-        # Delta color 'inverse' means lower is better (green) for spend and CAC
-        col1.metric("Optimized Budget (K)", f"${total_spend:,.2f}", f"${spend_delta:,.2f} vs Past", delta_color="inverse")
-        col2.metric("Target Leads Met", f"{int(sum(channel_leads))}", f"{int(leads_delta)} vs Past")
-        col3.metric("Blended CAC (K)", f"${blended_cac:,.2f}", f"${cac_delta:,.2f} vs Past", delta_color="inverse")
-        
-        st.markdown("---")
         
         df_results = pd.DataFrame({
             "Channel": list(channels.keys()),
@@ -224,6 +211,7 @@ if result.success:
         })
         
         col_table, col_chart = st.columns([1.5, 1], gap="large")
+        
         with col_table:
             st.subheader("Optimal Budget Allocation")
             
@@ -235,11 +223,10 @@ if result.success:
             })
             
             st.dataframe(styled_df, hide_index=True, use_container_width=True)
-        
-        
+            
         with col_chart:
             st.subheader("Budget Share")
-            # Upgraded to a sleek Donut Chart with no messy legend
+            # Sleek Donut Chart
             fig_donut = px.pie(df_results, values="Recommended Budget (K)", names="Channel", hole=0.65)
             fig_donut.update_traces(textposition='inside', textinfo='percent+label', showlegend=False)
             fig_donut.update_layout(margin=dict(t=10, b=10, l=10, r=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
@@ -293,13 +280,14 @@ if result.success:
                 st.markdown(prompt)
             st.session_state.messages.append({"role": "user", "content": prompt})
             
+            # Removed deltas from the AI context as well so the chat doesn't crash!
             dashboard_context = f"""
             You are a senior enterprise growth marketing data strategist. 
             The user is viewing a custom Media Mix Optimization dashboard.
             
-            Total Recommended Spend: ${total_spend:,.2f}K (Delta vs past: ${spend_delta:,.2f}K)
-            Required Scale Target: {int(sum(channel_leads))} Leads (Delta vs past: {int(leads_delta)})
-            Calculated Blended System CAC: ${blended_cac:,.2f}K (Delta vs past: ${cac_delta:,.2f}K)
+            Total Recommended Spend: ${total_spend:,.2f}K
+            Required Scale Target: {int(sum(channel_leads))} Leads
+            Calculated Blended System CAC: ${blended_cac:,.2f}K
             
             Granular Data Points Matrix:
             {df_results.to_string()}
