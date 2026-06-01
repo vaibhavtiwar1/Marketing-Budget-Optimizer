@@ -197,7 +197,7 @@ if result.success:
         
         # Clean metrics, no messy deltas!
         col1.metric("Optimized Budget (K)", f"${total_spend:,.2f}")
-        col2.metric("Target Leads Met", f"{int(sum(channel_leads))}")
+        col2.metric("Target Leads Met", f"{int(round(sum(channel_leads)))}")
         col3.metric("Blended CAC (K)", f"${blended_cac:,.2f}")
         
         st.markdown("---")
@@ -286,7 +286,7 @@ if result.success:
             The user is viewing a custom Media Mix Optimization dashboard.
             
             Total Recommended Spend: ${total_spend:,.2f}K
-            Required Scale Target: {int(sum(channel_leads))} Leads
+            Required Scale Target: {int(round(sum(channel_leads)))} Leads
             Calculated Blended System CAC: ${blended_cac:,.2f}K
             
             Granular Data Points Matrix:
