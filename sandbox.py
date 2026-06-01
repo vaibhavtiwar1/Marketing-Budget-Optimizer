@@ -206,14 +206,15 @@ if result.success:
         
         col_table, col_chart = st.columns([1.5, 1], gap="large")
         
-        with col_table:
+    with col_table:
             st.subheader("Optimal Budget Allocation")
-            # Adding a subtle gradient to the recommended budget column
+            
+            # Clean, fast formatting without requiring external color libraries
             styled_df = df_results.style.format({
                 "Recommended Budget (K)": "${:,.2f}",
                 "Expected Leads": "{:.1f}",
                 "Effective CAC (K)": "${:,.2f}"
-            }).background_gradient(subset=["Recommended Budget (K)"], cmap="Greens", vmin=0)
+            })
             
             st.dataframe(styled_df, hide_index=True, use_container_width=True)
             
