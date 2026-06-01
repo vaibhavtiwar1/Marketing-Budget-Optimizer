@@ -291,7 +291,7 @@ if result.success:
     # ------------------------------------------
     with tab2:
         st.markdown("<br>", unsafe_allow_html=True)
-        st.subheader("🧠 AI Strategic Advisor")
+        st.subheader("✨ AI Strategic Advisor")
         st.caption("Consult your dedicated partner agent regarding cross-channel scaling recommendations. The agent has full visibility into your active matrix.")
         
         # Pull key cleanly from native vault
