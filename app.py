@@ -186,7 +186,7 @@ if result.success:
     """, unsafe_allow_html=True)
 
     # --- Create the Tabbed Workspace ---
-    tab1, tab2 = st.tabs(["📊 Optimization Matrix", "🧠 AI Strategic Advisor"])
+    tab1, tab2 = st.tabs(["📊 Optimization Matrix", "✨ AI Strategic Advisor"])
     
     # ------------------------------------------
     # TAB 1: The Math & Data Dashboard
