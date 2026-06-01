@@ -1,6 +1,7 @@
+What does a website with following theme look like
 [theme]
-primaryColor = "#b482d1"
-backgroundColor = "#1d288a"
-secondaryBackgroundColor = "#590954"
+primaryColor = "#00FFAA"
+backgroundColor = "#050814"
+secondaryBackgroundColor = "#111827"
 textColor = "#E2E8F0"
 font = "serif"
