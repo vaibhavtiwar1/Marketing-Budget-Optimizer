@@ -259,11 +259,6 @@ if result.success:
             with st.chat_message("assistant"):
                 st.markdown(ai_reply)
             st.session_state.messages.append({"role": "assistant", "content": ai_reply})
-            
-            # Add AI message to UI
-            with st.chat_message("assistant"):
-                st.markdown(mock_response)
-            st.session_state.messages.append({"role": "assistant", "content": mock_response})
 
 else:
     st.error("The optimizer could not find a feasible solution. Check your historical data inputs.")
