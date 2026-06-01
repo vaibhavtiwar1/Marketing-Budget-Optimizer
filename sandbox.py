@@ -209,9 +209,56 @@ if result.success:
                 st.markdown(prompt)
             st.session_state.messages.append({"role": "user", "content": prompt})
             
-            # 4. Generate AI Response (Mocked for now until we add the API!)
-            # In the next step, we will replace this mock text with a live LLM API call
-            mock_response = f"*(This is a placeholder for the AI.)* To answer your question about '{prompt}', I would look at the Effective CAC column. Since {list(channels.keys())[0]} has the current highest efficiency, we should protect its budget first."
+            # --- THE MAGIC: Dynamic System Prompt ---
+            # We secretly feed the AI the live state of your dashboard math
+            dashboard_context = f"""
+            You are an elite AI Marketing Advisor. 
+            The user is currently looking at a Media Mix Dashboard. 
+            Total Budget: ${total_spend:,.2f}K. 
+            Target Leads: {int(sum(channel_leads))}.
+            Blended CAC: ${blended_cac:,.2f}K.
+            
+            Live Channel Breakdown Data:
+            {df_results.to_string()}
+            
+            Instructions:
+            1. Answer the user's questions based ONLY on this current data state. 
+            2. Be concise, highly strategic, and professional. 
+            3. Point out which channels are saturated (Logarithmic) vs which have a flat cost (Linear).
+            4. Keep responses under 3 short paragraphs.
+            """
+            
+            # Format chat history for Gemini
+            api_messages = []
+            for msg in st.session_state.messages:
+                # Map Streamlit roles to Gemini SDK roles
+                role = "user" if msg["role"] == "user" else "model"
+                api_messages.append(
+                    types.Content(role=role, parts=[types.Part.from_text(text=msg["content"])])
+                )
+                
+            config = types.GenerateContentConfig(
+                system_instruction=dashboard_context,
+                temperature=0.7,
+            )
+            
+            # 4. Generate REAL AI Response
+            with st.spinner("Analyzing dashboard..."):
+                try:
+                    # Using Gemini 2.5 Flash: The fastest model for real-time chat
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=api_messages,
+                        config=config
+                    )
+                    ai_reply = response.text
+                except Exception as e:
+                    ai_reply = f"🚨 API Connection Error: {e}"
+            
+            # Add AI message to UI
+            with st.chat_message("assistant"):
+                st.markdown(ai_reply)
+            st.session_state.messages.append({"role": "assistant", "content": ai_reply})
             
             # Add AI message to UI
             with st.chat_message("assistant"):
