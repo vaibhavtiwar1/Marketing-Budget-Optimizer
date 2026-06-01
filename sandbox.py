@@ -163,25 +163,44 @@ if target_leads > theoretical_max_leads:
 result = minimize(objective_function, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
 
 # ==========================================
-# 6. Premium UI Layout (Tabs & Delta Metrics)
+# 6. Premium UI Layout (Cyberpunk Theme)
 # ==========================================
 if result.success:
     optimized_budgets = result.x
     channel_leads = [lead_function(b, ch) for b, ch in zip(optimized_budgets, channels.keys())]
     total_spend = np.sum(optimized_budgets)
     blended_cac = total_spend / target_leads
-    
-    # Calculate Deltas (Historical vs Optimized)
-    orig_spend = edited_df["Past Spend (K)"].astype(float).sum()
-    orig_leads = edited_df["Past Leads"].astype(float).sum()
-    orig_cac = orig_spend / orig_leads if orig_leads > 0 else 0
-    
-    spend_delta = total_spend - orig_spend
-    leads_delta = int(sum(channel_leads)) - orig_leads
-    cac_delta = blended_cac - orig_cac
+
+    # --- INJECT CUSTOM TECHNO CSS ---
+    st.markdown("""
+    <style>
+    /* Futuristic Radial Background */
+    .stApp {
+        background: radial-gradient(circle at 50% -20%, #1a0b2e 0%, #050814 70%, #000000 100%);
+    }
+    /* Neon Text Glow for Metrics */
+    [data-testid="stMetricValue"] {
+        text-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
     # --- Create the Tabbed Workspace ---
     tab1, tab2 = st.tabs(["📊 Optimization Matrix", "🧠 AI Strategic Advisor"])
+    
+    # ------------------------------------------
+    # TAB 1: The Math & Data Dashboard
+    # ------------------------------------------
+    with tab1:
+        st.markdown("<br>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
+        
+        # Clean metrics, no messy deltas!
+        col1.metric("Optimized Budget (K)", f"${total_spend:,.2f}")
+        col2.metric("Target Leads Met", f"{int(sum(channel_leads))}")
+        col3.metric("Blended CAC (K)", f"${blended_cac:,.2f}")
+        
+        st.markdown("---")
     
     # ------------------------------------------
     # TAB 1: The Math & Data Dashboard
