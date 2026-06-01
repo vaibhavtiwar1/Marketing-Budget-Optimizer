@@ -205,8 +205,7 @@ if result.success:
         })
         
         col_table, col_chart = st.columns([1.5, 1], gap="large")
-        
-    with col_table:
+        with col_table:
             st.subheader("Optimal Budget Allocation")
             
             # Clean, fast formatting without requiring external color libraries
@@ -217,7 +216,8 @@ if result.success:
             })
             
             st.dataframe(styled_df, hide_index=True, use_container_width=True)
-            
+        
+        
         with col_chart:
             st.subheader("Budget Share")
             # Upgraded to a sleek Donut Chart with no messy legend
