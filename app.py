@@ -163,22 +163,40 @@ if target_leads > theoretical_max_leads:
 result = minimize(objective_function, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
 
 # ==========================================
-# 6. Split-Screen UX Layout (70% Dashboard / 30% AI Chat)
+# 6. Premium UI Layout (Cyberpunk Theme)
 # ==========================================
 if result.success:
     optimized_budgets = result.x
     channel_leads = [lead_function(b, ch) for b, ch in zip(optimized_budgets, channels.keys())]
     total_spend = np.sum(optimized_budgets)
     blended_cac = total_spend / target_leads
-    
-    dash_col, chat_col = st.columns([7, 3], gap="large")
+
+    # --- INJECT CUSTOM TECHNO CSS ---
+    st.markdown("""
+    <style>
+    /* Futuristic Radial Background */
+    .stApp {
+        background: radial-gradient(circle at 50% -20%, #1a0b2e 0%, #050814 70%, #000000 100%);
+    }
+    /* Neon Text Glow for Metrics */
+    [data-testid="stMetricValue"] {
+        text-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # --- Create the Tabbed Workspace ---
+    tab1, tab2 = st.tabs(["📊 Optimization Matrix", "🧠 AI Strategic Advisor"])
     
     # ------------------------------------------
-    # Left Column: Dashboard Visualizations
+    # TAB 1: The Math & Data Dashboard
     # ------------------------------------------
-    with dash_col:
+    with tab1:
+        st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
-        col1.metric("Optimized Budget Needed (K)", f"${total_spend:,.2f}")
+        
+        # Clean metrics, no messy deltas!
+        col1.metric("Optimized Budget (K)", f"${total_spend:,.2f}")
         col2.metric("Target Leads Met", f"{int(sum(channel_leads))}")
         col3.metric("Blended CAC (K)", f"${blended_cac:,.2f}")
         
@@ -192,20 +210,27 @@ if result.success:
             "Effective CAC (K)": [b/l if l > 0 else 0 for b, l in zip(optimized_budgets, channel_leads)]
         })
         
-        col_table, col_chart = st.columns([1.3, 1])
+        col_table, col_chart = st.columns([1.5, 1], gap="large")
+        
         with col_table:
             st.subheader("Optimal Budget Allocation")
-            st.dataframe(df_results.style.format({
+            
+            # Clean, fast formatting without requiring external color libraries
+            styled_df = df_results.style.format({
                 "Recommended Budget (K)": "${:,.2f}",
                 "Expected Leads": "{:.1f}",
                 "Effective CAC (K)": "${:,.2f}"
-            }), hide_index=True)
+            })
+            
+            st.dataframe(styled_df, hide_index=True, use_container_width=True)
             
         with col_chart:
             st.subheader("Budget Share")
-            fig_pie = px.pie(df_results, values="Recommended Budget (K)", names="Channel", hole=0.4)
-            fig_pie.update_layout(margin=dict(t=0, b=0, l=0, r=0), showlegend=False)
-            st.plotly_chart(fig_pie, use_container_width=True)
+            # Sleek Donut Chart
+            fig_donut = px.pie(df_results, values="Recommended Budget (K)", names="Channel", hole=0.65)
+            fig_donut.update_traces(textposition='inside', textinfo='percent+label', showlegend=False)
+            fig_donut.update_layout(margin=dict(t=10, b=10, l=10, r=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+            st.plotly_chart(fig_donut, use_container_width=True)
 
         st.markdown("---")
         st.subheader("Comparative Curve Saturation Models")
@@ -222,15 +247,23 @@ if result.success:
             fig_curve.add_trace(go.Scatter(x=budget_range, y=[lead_function(b, ch_name) for b in budget_range], mode='lines', name=ch_name, line=dict(width=2.5)))
             fig_curve.add_trace(go.Scatter(x=[opt_b], y=[opt_l], mode='markers', marker=dict(size=11, line=dict(width=1.5, color='white')), showlegend=False, hoverinfo="skip"))
 
-        fig_curve.update_layout(xaxis_title="Budget Allocated (K)", yaxis_title="Leads Generated", hovermode="x unified", margin=dict(t=10, b=10, l=10, r=10))
+        fig_curve.update_layout(
+            xaxis_title="Budget Allocated (K)", 
+            yaxis_title="Leads Generated", 
+            hovermode="x unified", 
+            margin=dict(t=10, b=10, l=10, r=10),
+            paper_bgcolor="rgba(0,0,0,0)", 
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
         st.plotly_chart(fig_curve, use_container_width=True)
 
     # ------------------------------------------
-    # Right Column: AI Advisor Agent
+    # TAB 2: AI Advisor Agent (Full Width)
     # ------------------------------------------
-    with chat_col:
+    with tab2:
+        st.markdown("<br>", unsafe_allow_html=True)
         st.subheader("🧠 AI Strategic Advisor")
-        st.caption("Consult your dedicated partner agent regarding cross-channel scaling recommendations.")
+        st.caption("Consult your dedicated partner agent regarding cross-channel scaling recommendations. The agent has full visibility into your active matrix.")
         
         # Pull key cleanly from native vault
         client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
@@ -247,19 +280,21 @@ if result.success:
                 st.markdown(prompt)
             st.session_state.messages.append({"role": "user", "content": prompt})
             
+            # Removed deltas from the AI context as well so the chat doesn't crash!
             dashboard_context = f"""
             You are a senior enterprise growth marketing data strategist. 
-            The user is viewing a custom Media Mix Optimization dashboard with these active parameters:
-            - Total Recommended Spend: ${total_spend:,.2f}K
-            - Required Scale Target: {int(sum(channel_leads))} Leads
-            - Calculated Blended System CAC: ${blended_cac:,.2f}K
+            The user is viewing a custom Media Mix Optimization dashboard.
+            
+            Total Recommended Spend: ${total_spend:,.2f}K
+            Required Scale Target: {int(sum(channel_leads))} Leads
+            Calculated Blended System CAC: ${blended_cac:,.2f}K
             
             Granular Data Points Matrix:
             {df_results.to_string()}
             
             Contextual Execution Strategy Rules:
             1. Analyze queries matching exactly what the matrix dictates.
-            2. Address the mathematical architecture differences: 'Logarithmic' (immediate dropoff), 'Hill Function' (has an S-curve setup), and 'Negative Exponential' (reaches a strict audience ceiling).
+            2. Address the mathematical architecture differences.
             3. Be precise, corporate-level clinical, and highly strategic. Limit feedback to 3 concise paragraphs max.
             """
             
