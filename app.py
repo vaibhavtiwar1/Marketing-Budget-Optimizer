@@ -11,9 +11,38 @@ from google.genai import types
 # 1. Page Configuration & Theme
 # ==========================================
 st.set_page_config(page_title="Enterprise Media Mix Optimizer", layout="wide")
-st.title("📊 Enterprise Algorithmic Media Mix Budget Optimizer")
-st.markdown("*An advanced, multi-model budget allocation simulator powered by continuous curves and live AI analysis.*")
 
+# --- Define the Pop-Up Modal ---
+@st.dialog("📖 How to Leverage this Optimizer")
+def guide_modal():
+    st.markdown("""
+    **Welcome to the Enterprise Media Mix Optimizer!** Standard marketing calculators use flawed linear math (assuming $1,000 always gets 10x more leads than $100). This engine uses non-linear calculus to find the exact point of diminishing returns for every channel.
+    
+    ### 🚀 Step-by-Step Guide
+    1. **Input Your Baseline:** Go to the left sidebar and enter your historical spend and total leads for each channel.
+    2. **Set Your Target:** Adjust the *Target Total Leads* slider to define your pipeline goal.
+    3. **Refine the Math (Advanced):** Toggle *Advanced Controls* to manually assign different mathematical curves to specific channels or set fixed infrastructure costs (like software subscriptions).
+    4. **Analyze the Matrix:** Review the *Optimal Budget Allocation* table. The algorithm actively shifts money away from saturated channels and redirects it into high-efficiency, scaling channels to minimize your Blended CAC.
+    5. **Consult the AI:** Switch to the *AI Strategic Advisor* tab. The agent reads your live matrix and provides Fortune-500 level strategic advice on your next move.
+
+    ### 🧮 The 5 Mathematical Archetypes
+    * **Logarithmic (Search):** High initial efficiency, but hits a hard saturation ceiling rapidly.
+    * **Hill Function (Paid Social):** Starts slow (platform learning phase), hits a hyper-efficient scaling period, then flattens out.
+    * **Negative Exponential (Email):** Scales linearly until it hits the absolute limit of your audience/list size.
+    * **Power Law (SEO):** Diminishes slowly and compounds over time without a rigid ceiling.
+    * **Shifted Sigmoid (Events):** Yields zero results until a massive minimum entry cost is crossed.
+    """)
+
+# --- Header with Top-Right Button ---
+col_title, col_btn = st.columns([8.5, 1.5])
+with col_title:
+    st.title("📊 Enterprise Algorithmic Media Mix Budget Optimizer")
+    st.markdown("*An advanced, multi-model budget allocation simulator powered by continuous curves and live AI analysis.*")
+
+with col_btn:
+    st.markdown("<br>", unsafe_allow_html=True) # Adds padding to align button with title
+    if st.button("📖 How to Use Tool", use_container_width=True):
+        guide_modal()
 # ==========================================
 # 2. Sidebar - Basic Parameters & Data Input
 # ==========================================
