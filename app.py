@@ -200,16 +200,23 @@ if result.success:
     total_spend = np.sum(optimized_budgets)
     blended_cac = total_spend / target_leads
 
-    # --- INJECT CUSTOM TECHNO CSS ---
+# --- CUSTOM TECHNO CSS ---
     st.markdown("""
     <style>
-    /* Futuristic Radial Background */
+    /* Lighter Synthwave Radial Background */
     .stApp {
-        background: radial-gradient(circle at 50% -20%, #1a0b2e 0%, #050814 70%, #000000 100%);
+        background: radial-gradient(circle at 50% 0%, #431c7a 0%, #130f26 50%, #0b0817 100%);
     }
-    /* Neon Text Glow for Metrics */
+    
+    /* Layered Neon Text Glow for Metrics */
     [data-testid="stMetricValue"] {
-        text-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
+        color: #FFFFFF !important; /* Keeps the numbers crisp and readable */
+        text-shadow: 0 0 10px rgba(0, 255, 170, 0.8), 0 0 20px rgba(0, 255, 170, 0.3);
+    }
+    
+    /* Soften Metric Labels for better visual hierarchy */
+    [data-testid="stMetricLabel"] {
+        color: #b8b1ce !important; 
     }
     </style>
     """, unsafe_allow_html=True)
