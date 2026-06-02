@@ -10,13 +10,13 @@ from google.genai import types
 # ==========================================
 # 1. Page Configuration & Theme
 # ==========================================
-st.set_page_config(page_title="Enterprise Media Mix Optimizer", layout="wide")
+st.set_page_config(page_title="Enterprise Marketing Optimizer", layout="wide")
 
 # --- Define the Pop-Up Modal ---
 @st.dialog("📖 How to Leverage this Optimizer")
 def guide_modal():
     st.markdown("""
-    **Welcome to the Enterprise Media Mix Optimizer!** Standard marketing calculators use flawed linear math (assuming $1,000 always gets 10x more leads than $100). This engine uses non-linear calculus to find the exact point of diminishing returns for every channel.
+    **Welcome to the Enterprise Marketing Optimizer!** Standard marketing calculators use flawed linear math (assuming $1,000 always gets 10x more leads than $100). This engine uses non-linear calculus to find the exact point of diminishing returns for every channel.
     
     ### 🚀 Step-by-Step Guide
     1. **Input Your Baseline:** Go to the left sidebar and enter your historical spend and total leads for each channel.
@@ -36,7 +36,7 @@ def guide_modal():
 # --- Header with Top-Right Button ---
 col_title, col_btn = st.columns([8.5, 1.5])
 with col_title:
-    st.title("📊 Enterprise Algorithmic Media Mix Budget Optimizer")
+    st.title("📊 Enterprise Algorithmic Marketing Budget Optimizer")
     st.markdown("*An advanced, multi-model budget allocation simulator powered by continuous curves and live AI analysis.*")
 
 with col_btn:
@@ -319,7 +319,7 @@ if result.success:
             # Removed deltas from the AI context as well so the chat doesn't crash!
             dashboard_context = f"""
             You are a senior enterprise growth marketing data strategist. 
-            The user is viewing a custom Media Mix Optimization dashboard.
+            The user is viewing a custom Marketing Optimization dashboard.
             
             Total Recommended Spend: ${total_spend:,.2f}K
             Required Scale Target: {int(round(sum(channel_leads)))} Leads
