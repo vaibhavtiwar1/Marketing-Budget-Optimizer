@@ -38,3 +38,4 @@ The engine supports five distinct continuous-curve models, allowing it to mimic 
 5. **Shifted Sigmoid (Events / PR):** Yields zero results until a massive minimum entry cost (e.g., a trade show sponsorship) is crossed.
 
 ---
+https://vaibhavtiwar1-marketing-budget-optimizer-app-srt8k5.streamlit.app/
